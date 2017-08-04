@@ -4,11 +4,7 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	<title>Live input record and playback</title>
-    <style type="text/css">
-        #element1 {float:left;}
-        #element2 {float:left;}
-        #element3 {float:right;}
-    </style>
+
   <style type='text/css'>
     ul { list-style: none; }
     #recordingslist audio { display: block; margin-bottom: 10px; }
@@ -30,23 +26,19 @@
   <script src="fileRead.js"></script>
     <script>
         var index = 0;
-        function previous(){
-            index--;
-            if(index == -1) index = 99;
+        var currentFileName = "";
+        function next(){
+            index = (parseInt(Math.random()*100)) % 100;
+            console.log(index);
             loadText("showText", index);
         }
-        function next(){
-            index++;
-            if(index == 100) index = 0;
-            loadText("showText",index);
-        }
+
     </script>
 </head>
 <body>
 
-    <button onclick="previous()"> < </button>
     <div id ="showText"></div>
-    <button onclick="next()"> > </button>
+    <button onclick="next()"> NEXT </button>
 
     <p>Before you enable microphone input either plug in headphones or turn the volume down if you want to avoid ear splitting feedback!</p>
   <button onclick="startRecording(this);">record</button>
@@ -99,6 +91,22 @@
 
     recorder.clear();
   }
+  function discard(){
+      if(currentFileName != ""){
+          var storageRef = firebase.storage().ref();
+          var discardRef = storageRef.child(currentFileName);
+
+          // Delete the file
+          discardRef.delete().then(function() {
+              console.log("file discarded");
+              document.getElementById("recordingslist").innerHTML = "";
+          }).catch(function(error) {
+              console.log("error occurred");
+          });
+
+
+      }
+  }
 
   function createDownloadLink() {
     recorder && recorder.exportWAV(function(blob) {
@@ -106,24 +114,28 @@
       var li = document.createElement('li');
       var au = document.createElement('audio');
       var hf = document.createElement('a');
-      
+      var button = document.createElement('button');
+      var filename = index + "_" + new Date().toISOString() + '.wav';
+      currentFileName = filename;
       au.controls = true;
       au.src = url;
       hf.href = url;
-      hf.download = new Date().toISOString() + "_" + index +'.wav';
+      hf.download = filename;
       hf.innerHTML = hf.download;
+      button.onclick = discard;
+      button.innerHTML = "discard";
       li.appendChild(au);
       li.appendChild(hf);
+      li.appendChild(button);
+      recordingslist.innerHTML = "";
       recordingslist.appendChild(li);
-
-		var storageRef = firebase.storage().ref();
-		var filename = new Date().toISOString() + "_" + index +'.wav';
-		var voiceRef = storageRef.child(filename);
-		//var voiceSoundRef = storageRef.child('sounds/'+filename);
-		voiceRef.put(blob).then(function(snapshot){
-			console.log('Uploaded a blob or file!');
+      var storageRef = firebase.storage().ref();
+      var voiceRef = storageRef.child(filename);
+        //var voiceSoundRef = storageRef.child('sounds/'+filename);
+        voiceRef.put(blob).then(function(snapshot){
+            console.log('Uploaded a blob or file!');
 		});
-		next();
+		//next();
     });
   }
 
