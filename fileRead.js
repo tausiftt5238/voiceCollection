@@ -8,8 +8,9 @@ function LoadFile() {
         //console.log(xhr.responseText);
         if (this.readyState == 4 && this.status == 200) {
             sentences = xhr.responseText.split("\n");
+            index = (parseInt(Math.random()*100)) % 100;
             document.getElementById("showText").innerHTML =
-                sentences[0];
+                sentences[index];
         }
     }
     xhr.open("GET","bangla.txt");

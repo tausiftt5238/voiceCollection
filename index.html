@@ -6,7 +6,7 @@
 	<title>Live input record and playback</title>
 
   <style type='text/css'>
-    ul { list-style: none; }
+
     #recordingslist audio { display: block; margin-bottom: 10px; }
   </style>
   <script src="https://www.gstatic.com/firebasejs/4.1.5/firebase.js"></script>
@@ -36,26 +36,32 @@
     </script>
 </head>
 <body>
+    <h2>Instructions</h2>
+    <ul style="font-size: 18px;">
+        <li>Please connect your earphone/headphone and give permission (if you're using
+        Google Chrome) to use your microphone.</li>
+        <li>Click the record button and speak out the line that appears.</li>
+        <li>Click stop to end recording.</li>
+        <li>Click next for a new sentence.</li>
+        <li>You may play the recording and discard it if you don't like it.</li>
+        <li>The recording doesn't have to be completely clean/devoid of noise,
+            some small amount of noise is not an issue.
+            Just make sure what you are saying can be heard clearly.</li>
+    </ul>
+    <h3><div id ="showText" style="font-size: 30px"></div></h3>
 
-    <div id ="showText"></div>
-    <button onclick="next()"> NEXT </button>
+    <button onclick="next()" style="font-size: 18px;"> next </button>
+    <button onclick="startRecording(this);" style="font-size: 18px;">record</button>
+    <button onclick="stopRecording(this);" style="font-size: 18px;" disabled>stop</button>
+  
+  <h2>Recording</h2>
+  <ul style="list-style: none" id="recordingslist"></ul>
 
-    <p>Before you enable microphone input either plug in headphones or turn the volume down if you want to avoid ear splitting feedback!</p>
-  <button onclick="startRecording(this);">record</button>
-  <button onclick="stopRecording(this);" disabled>stop</button>
-  
-  <h2>Recordings</h2>
-  <ul id="recordingslist"></ul>
-  
-  <h2>Log</h2>
   <pre id="log"></pre>
 
   <script>
 
-
-
   function __log(e, data) {
-    log.innerHTML += "\n" + e + " " + (data || '');
   }
 
   var audio_context;
