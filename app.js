@@ -50,6 +50,7 @@
     });*/
 
     function writeUserData(email, age, gender, ethnicity) {
+        userId=firebase.auth().currentUser.uid;
         firebase.database().ref('users/' + userId).set({
             email : email,
             age: age,
