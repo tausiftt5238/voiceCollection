@@ -56,18 +56,50 @@
         }
 
     </style>
-
+    <script>
+        function showLogin(){
+            var x = document.getElementById('login_div');
+            x.style.display = 'block';
+            var x = document.getElementById('signup_div');
+            x.style.display = 'none';
+        }
+        function showSignUp(){
+            var x = document.getElementById('login_div');
+            x.style.display = 'none';
+            var x = document.getElementById('signup_div');
+            x.style.display = 'block';
+        }
+    </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prefixfree/1.0.7/prefixfree.min.js"></script>
 
 </head>
 
 <body>
-    <div class="login">
-        <input id="txtEmail" type="email" placeholder="Email">
-        <input id="txtPassword" type="password" placeholder="Password">
+    <div id="login_div" class="login" style="display: block">
+        <div>
+            <button class="btn-primary" onclick="showLogin()">login</button>
+            <button class="btn-primary" onclick="showSignUp()">signup</button>
+        </div>
+        <input id="txtEmail_login" type="email" placeholder="Email">
+        <input id="txtPassword_login" type="password" placeholder="Password">
         <button id="btnLogin" class="btn btn-action">
             Login
         </button>
+
+    </div>
+    <div id="signup_div" class="login" style="display: none">
+        <div>
+            <button class="btn-primary" onclick="showLogin()">login</button>
+            <button class="btn-primary" onclick="showSignUp()">signup</button>
+        </div>
+        <input id="txtEmail_signup" type="email" placeholder="Email">
+        <input id="txtPassword_signup" type="password" placeholder="Password">
+        <input id="txtAge" type="number" placeholder="Age">
+        <select id="txtGender" class="btn btn-secondary">
+            <option value="male">male</option>
+            <option value="female">female</option>
+        </select><br>
+        <input id="txtEthnicity" type="text" placeholder="Ethnicity">
         <button id="btnSignUp" class="btn btn-secondary">
             Sign Up
         </button>
