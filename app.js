@@ -17,10 +17,17 @@
     const btnSignUp = document.getElementById('btnSignUp');
     const btnLogout = document.getElementById('btnLogout');
 
+    var email;
+    var pass;
+    var age;
+    var gender;
+    var ethnicity;
+
+
     //Add login event
     btnLogin.addEventListener('click' , e => {
-        const email =txtEmail_login.value;
-        const pass = txtPassword_login.value;
+        email =txtEmail_login.value;
+        pass = txtPassword_login.value;
         const auth = firebase.auth();
         //Sign in
         const promise = auth.signInWithEmailAndPassword(email,pass);
@@ -31,11 +38,11 @@
     //Add signup event
     btnSignUp.addEventListener('click' , e => {
         console.log('sign up clicked');
-        const email =txtEmail_signup.value;
-        const pass = txtPassword_signup.value;
-        const age = txtAge.value;
-        const gender = txtGender.value;
-        const ethnicity = txtEthnicity.value;
+        email =txtEmail_signup.value;
+        pass = txtPassword_signup.value;
+        age = txtAge.value;
+        gender = txtGender.value;
+        ethnicity = txtEthnicity.value;
         const auth = firebase.auth();
         //Sign in
         const promise = auth.createUserWithEmailAndPassword(email,pass);
@@ -49,19 +56,19 @@
        firebase.auth().signOut();
     });*/
 
-    function writeUserData(email, age, gender, ethnicity) {
-        userId=firebase.auth().currentUser.uid;
+    function writeUserData(userId, email, age, gender, ethnicity) {
         firebase.database().ref('users/' + userId).set({
             email : email,
             age: age,
             gender : gender,
-            ethnicity : ethnity
+            ethnicity : ethnicity
         });
     }
 
     firebase.auth().onAuthStateChanged(firebaseUser => {
        if(firebaseUser){
            console.log(firebaseUser);
+           writeUserData(firebase.auth().currentUser, email,age, gender, ethnicity);
            window.location.replace("voicerecord.html");
        }else{
            console.log('not logged in');
