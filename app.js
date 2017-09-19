@@ -24,6 +24,7 @@
         //Sign in
         const promise = auth.signInWithEmailAndPassword(email,pass);
         promise.catch(e => console.log(e.message));
+        window.location.replace("voicerecord.html");
     });
 
     //Add signup event
