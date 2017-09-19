@@ -8,6 +8,7 @@
         messagingSenderId: "669484910928"
     };
     firebase.initializeApp(config);
+    var database = firebase.database();
 
     //Get elements
     const txtEmail = document.getElementById('txtEmail');
@@ -39,12 +40,23 @@
         //Sign in
         const promise = auth.createUserWithEmailAndPassword(email,pass);
         promise.catch(e => alert("Login failed"));
+
+        writeUserData(email,age,gender,ethnicity);
     });
 
     //Add logout event
     /*btnLogout.addEventListener('click', e =>{
        firebase.auth().signOut();
     });*/
+
+    function writeUserData(email, age, gender, ethnicity) {
+        firebase.database().ref('users/' + userId).set({
+            email : email,
+            age: age,
+            gender : gender,
+            ethnicity : ethnity
+        });
+    }
 
     firebase.auth().onAuthStateChanged(firebaseUser => {
        if(firebaseUser){
