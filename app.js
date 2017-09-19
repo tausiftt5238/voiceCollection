@@ -31,7 +31,7 @@
         console.log('sign up clicked');
         const email =txtEmail_signup.value;
         const pass = txtPassword_signup.value;
-        const age = textAge.value;
+        const age = txtAge.value;
         const gender = txtGender.value;
         const ethnicity = txtEthnicity.value;
         const auth = firebase.auth();
@@ -41,9 +41,9 @@
     });
 
     //Add logout event
-    btnLogout.addEventListener('click', e =>{
+    /*btnLogout.addEventListener('click', e =>{
        firebase.auth().signOut();
-    });
+    });*/
 
     firebase.auth().onAuthStateChanged(firebaseUser => {
        if(firebaseUser){
