@@ -45,10 +45,13 @@
         ethnicity = txtEthnicity.value;
         const auth = firebase.auth();
         //Sign in
-        const promise = auth.createUserWithEmailAndPassword(email,pass);
-        promise.catch(e => alert("Login failed"));
+        const promise = auth.createUserWithEmailAndPassword(email,pass).catch(function(error) {
 
-        writeUserData(email,age,gender,ethnicity);
+            console.log(error);
+        });;
+        promise.catch(e => alert("Login failed"));
+        //userId=firebase.auth().currentUser.uid;
+        //writeUserData(userId,email,age,gender,ethnicity);
     });
 
     //Add logout event
@@ -57,21 +60,22 @@
     });*/
 
     function writeUserData(userId, email, age, gender, ethnicity) {
+        userId=firebase.auth().currentUser.uid;
         firebase.database().ref('users/' + userId).set({
             email : email,
             age: age,
             gender : gender,
             ethnicity : ethnicity
-        });
+        }).catch(e => alert(e));
     }
 
     firebase.auth().onAuthStateChanged(firebaseUser => {
-       if(firebaseUser){
-           console.log(firebaseUser);
-           writeUserData(firebase.auth().currentUser, email,age, gender, ethnicity);
-           window.location.replace("voicerecord.html");
-       }else{
-           console.log('not logged in');
-       }
+        if(firebaseUser){
+            console.log(firebaseUser);
+            writeUserData(firebase.auth().currentUser.uid, email,age, gender, ethnicity);
+            window.location.replace("voicerecord.html");
+        }else{
+            console.log('not logged in');
+        }
     });
 }());
