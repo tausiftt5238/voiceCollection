@@ -48,6 +48,7 @@
     firebase.auth().onAuthStateChanged(firebaseUser => {
        if(firebaseUser){
            console.log(firebaseUser);
+           window.location.replace("voicerecord.html");
        }else{
            console.log('not logged in');
        }
