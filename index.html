@@ -6,6 +6,7 @@
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
     <script src="https://www.gstatic.com/firebasejs/live/3.1/firebase.js"></script>
+    <script src="addDistrict.js"></script>
 
     <style>
         /* NOTE: The styles were added inline because Prefixfree needs access to your styles and they must be inlined if they are on local disk! */
@@ -92,14 +93,16 @@
             <button class="btn-primary" onclick="showLogin()">login</button>
             <button class="btn-primary" onclick="showSignUp()">signup</button>
         </div>
-        <input id="txtEmail_signup" type="email" placeholder="Email">
-        <input id="txtPassword_signup" type="password" placeholder="Password">
+        <input id="txtEmail_signup" type="email" placeholder="Email [must be valid]">
+        <input id="txtPassword_signup" type="password" placeholder="Password [At least 6 characters long]">
         <input id="txtAge" type="number" placeholder="Age">
-        <select id="txtGender" class="btn btn-secondary">
+        Gender<select id="txtGender" class="btn btn-secondary">
             <option value="male">male</option>
             <option value="female">female</option>
         </select><br>
-        <input id="txtEthnicity" type="text" placeholder="Ethnicity">
+        District <select id="txtEthnicity" class="btn btn-secondary">
+        </select><br>
+        <script>addDistrict();</script>
         <button id="btnSignUp" class="btn btn-secondary">
             Sign Up
         </button>

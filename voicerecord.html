@@ -11,6 +11,7 @@
   </style>
   <script src="https://www.gstatic.com/firebasejs/4.1.5/firebase.js"></script>
   <script>
+      var playing = false;
       // Initialize Firebase
       var config = {
           apiKey: "AIzaSyBtGYABHzNh41B9M-OJc6yNbqLe8VZxY94",
@@ -38,16 +39,30 @@
         var currentFileName = "";
         function next(){
             //index = (parseInt(Math.random()*100)) % 100;
+            if(playing){
+                playing = false;
+                recorder && recorder.stop();
+                __log('Stopped recording.');
+                // create WAV download link using audio data blob
+                createDownloadLink();
+                recorder.clear();
+            }
             index = (index+1)%102;
             console.log(index);
             recordingslist.innerHTML = "";
             loadText("showText", index);
         }
+        function logout(){
+            firebase.auth().signOut();
+        }
 
     </script>
 </head>
 <body>
-    <h2>Instructions</h2>
+    <div style="position: relative; overflow: hidden;" >
+        <div style="position: relative; width: 90%; float: left;"><h1>Instructions</h1></div>
+        <div style="position: relative; width: 10%; float: left;"><button onclick="logout()">Logout</button></div>
+    </div>
     <ul style="font-size: 18px;">
         <li>Please connect your earphone/headphone and give permission (if you're using
         Google Chrome) to use your microphone.</li>
@@ -58,6 +73,9 @@
         <li>The recording doesn't have to be completely clean/devoid of noise,
             some small amount of noise is not an issue.
             Just make sure what you are saying can be heard clearly.</li>
+        <h3><li>Please say the sentences exactly as written.</li></h3>
+        <h3><li>Please play back each recording at least once to make sure it
+            recorded what you said correctly</li></h3>
     </ul>
     <h3><div id ="showText" style="font-size: 30px"></div></h3>
 
@@ -91,6 +109,7 @@
   }
 
   function startRecording(button) {
+      playing = true;
     recorder && recorder.record();
     button.disabled = true;
     button.nextElementSibling.disabled = false;
