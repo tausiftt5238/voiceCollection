@@ -30,9 +30,11 @@
         pass = txtPassword_login.value;
         const auth = firebase.auth();
         //Sign in
-        const promise = auth.signInWithEmailAndPassword(email,pass);
+        const promise = auth.signInWithEmailAndPassword(email,pass).catch(function(error) {
+            console.log(error);
+        });
         promise.catch(e => console.log(e.message));
-        window.location.replace("voicerecord.html");
+        //window.location.replace("voicerecord.html");
     });
 
     //Add signup event
@@ -48,7 +50,7 @@
         const promise = auth.createUserWithEmailAndPassword(email,pass).catch(function(error) {
 
             console.log(error);
-        });;
+        });
         promise.catch(e => alert("Login failed"));
         //userId=firebase.auth().currentUser.uid;
         //writeUserData(userId,email,age,gender,ethnicity);
