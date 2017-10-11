@@ -18,7 +18,7 @@
             console.log('finally logged in');
         }else{
             console.log('not logged in');
-            //window.location.replace("index.html");
+            window.location.replace("index.html");
         }
     });
 }());

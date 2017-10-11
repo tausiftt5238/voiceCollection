@@ -10,6 +10,8 @@
     firebase.initializeApp(config);
     var database = firebase.database();
 
+    var signup = false;
+
     //Get elements
     const txtEmail = document.getElementById('txtEmail');
     const txtPassword = document.getElementById('txtPassword');
@@ -52,6 +54,7 @@
             console.log(error);
         });
         promise.catch(e => alert("Login failed"));
+        signup = true;
         //userId=firebase.auth().currentUser.uid;
         //writeUserData(userId,email,age,gender,ethnicity);
     });
@@ -74,7 +77,11 @@
     firebase.auth().onAuthStateChanged(firebaseUser => {
         if(firebaseUser){
             console.log(firebaseUser);
-            writeUserData(firebase.auth().currentUser.uid, email,age, gender, ethnicity);
+            if(signup){
+                writeUserData(firebase.auth().currentUser.uid, email,age, gender, ethnicity);
+                signup = false;
+            }
+
             window.location.replace("voicerecord.html");
         }else{
             console.log('not logged in');
