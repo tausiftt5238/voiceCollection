@@ -74,6 +74,10 @@
             gender : gender,
             ethnicity : ethnicity
         }).catch(e => alert(e));
+        index = (parseInt(Math.random()*174)) % 174;
+        firebase.database().ref('users/' + userId+'/latest').set({
+            index : index
+        }).catch(e => alert(e));
     }
 
     firebase.auth().onAuthStateChanged(firebaseUser => {
@@ -82,6 +86,7 @@
             if(signup){
                 writeUserData(firebase.auth().currentUser.uid, email,age, gender, ethnicity);
                 signup = false;
+
             }
 
             window.location.replace("voicerecord.html");
