@@ -34,6 +34,7 @@
         //Sign in
         const promise = auth.signInWithEmailAndPassword(email,pass).catch(function(error) {
             console.log(error);
+            alert(error);
         });
         promise.catch(e => console.log(e.message));
         //window.location.replace("voicerecord.html");
@@ -52,6 +53,7 @@
         const promise = auth.createUserWithEmailAndPassword(email,pass).catch(function(error) {
 
             console.log(error);
+            alert(error);
         });
         promise.catch(e => alert("Login failed"));
         signup = true;

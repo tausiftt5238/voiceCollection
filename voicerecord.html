@@ -26,13 +26,20 @@
                 createDownloadLink();
                 recorder.clear();
             }
-            index = (index+1)%102;
+            index = (index+1)%139;
             console.log(index);
             recordingslist.innerHTML = "";
             loadText("showText", index);
         }
         function logout(){
             firebase.auth().signOut();
+        }
+
+        function writeFileToUser(userId, filename) {
+            userId=firebase.auth().currentUser.uid;
+            firebase.database().ref('users/files/' + userId+'/'+index).set({
+                filename : filename
+            }).catch(e => alert(e));
         }
 
         function startUserMedia(stream) {
@@ -92,6 +99,7 @@
                 var button = document.createElement('button');
                 var filename = index + "_" + new Date().toISOString() + '.wav';
                 currentFileName = filename;
+                writeFileToUser(currentFileName);
                 au.controls = true;
                 au.src = url;
                 hf.href = url;
