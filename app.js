@@ -74,10 +74,6 @@
             gender : gender,
             ethnicity : ethnicity
         }).catch(e => alert(e));
-        index = (parseInt(Math.random()*174)) % 174;
-        firebase.database().ref('users/' + userId+'/latest').set({
-            index : index
-        }).catch(e => alert(e));
     }
 
     firebase.auth().onAuthStateChanged(firebaseUser => {

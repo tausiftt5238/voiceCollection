@@ -22,8 +22,9 @@
                 var start_index;
                 console.log('users/' + userId+'/latest/index');
                 firebase.database().ref('users/' + userId+'/latest/index').once('value').then(function(snapshot) {
-                    start_index = snapshot.val() + 1;
-                    if(start_index == undefined) start_index = 0;
+                    start_index = snapshot.val();
+                    if(start_index == undefined) start_index = (parseInt(Math.random()*174)) % 174;
+                    else start_index++;
                     LoadFile(start_index);
                 });
             }
