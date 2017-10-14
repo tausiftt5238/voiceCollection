@@ -8,7 +8,7 @@ function LoadFile() {
         //console.log(xhr.responseText);
         if (this.readyState == 4 && this.status == 200) {
             sentences = xhr.responseText.split("\n");
-            index = (parseInt(Math.random()*170)) % 170;
+            index = (parseInt(Math.random()*174)) % 174;
             document.getElementById("showText").innerHTML =
                 sentences[index];
         }
