@@ -9,16 +9,29 @@
     };
     firebase.initializeApp(config);
     var database = firebase.database();
+    var initialize = false;
 
     firebase.auth().onAuthStateChanged(firebaseUser => {
         if(firebaseUser){
             console.log(firebaseUser);
             ///writeUserData(firebase.auth().currentUser.uid, email,age, gender, ethnicity);
             //window.location.replace("voicerecord.html");
+            if(!initialize){
+                initialize = true;
+                var userId = firebase.auth().currentUser.uid;
+                var start_index;
+                console.log('users/' + userId+'/latest/index');
+                firebase.database().ref('users/' + userId+'/latest/index').once('value').then(function(snapshot) {
+                    start_index = snapshot.val() + 1;
+                    if(start_index == undefined) start_index = 0;
+                    LoadFile(start_index);
+                });
+            }
             console.log('finally logged in');
         }else{
             console.log('not logged in');
             window.location.replace("index.html");
         }
     });
+
 }());

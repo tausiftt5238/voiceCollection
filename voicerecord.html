@@ -35,6 +35,9 @@
                 firebase.database().ref('users/' + userId+'/files/'+index).set({
                     filename : filename
                 }).catch(e => alert(e));
+                firebase.database().ref('users/' + userId+'/latest').set({
+                    index : index
+                }).catch(e => alert(e));
             }
 
         }
@@ -182,7 +185,7 @@
     navigator.getUserMedia({audio: true}, startUserMedia, function(e) {
       __log('No live audio input: ' + e);
     });
-    LoadFile();
+
 
   };
   </script>
