@@ -22,6 +22,8 @@
                 playing = false;
                 recorder && recorder.stop();
                 __log('Stopped recording.');
+                document.getElementById('startRecordingButton').disabled = false;
+                document.getElementById('stopRecordingButton').disabled = true;
                 // create WAV download link using audio data blob
                 createDownloadLink();
                 recorder.clear();
@@ -35,11 +37,14 @@
             firebase.auth().signOut();
         }
 
-        function writeFileToUser(userId, filename) {
+        function writeFileToUser(filename) {
             userId=firebase.auth().currentUser.uid;
-            firebase.database().ref('users/files/' + userId+'/'+index).set({
-                filename : filename
-            }).catch(e => alert(e));
+            if(filename != ""){
+                firebase.database().ref('users/' + userId+'/files/'+index).set({
+                    filename : filename
+                }).catch(e => alert(e));
+            }
+
         }
 
         function startUserMedia(stream) {
@@ -146,8 +151,8 @@
     <h3><div id ="showText" style="font-size: 30px"></div></h3>
 
     <button onclick="next()" style="font-size: 18px;"> next </button>
-    <button onclick="startRecording(this);" style="font-size: 18px;">record</button>
-    <button onclick="stopRecording(this);" style="font-size: 18px;" disabled>stop</button>
+    <button id="startRecordingButton" onclick="startRecording(this);" style="font-size: 18px;">record</button>
+    <button id="stopRecordingButton" onclick="stopRecording(this);" style="font-size: 18px;" disabled>stop</button>
   
   <h2>Recording</h2>
   <ul style="list-style: none" id="recordingslist"></ul>
