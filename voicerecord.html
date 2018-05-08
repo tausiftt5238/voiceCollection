@@ -1,194 +1,246 @@
 <!DOCTYPE html>
-
 <html>
-<head>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	<title>Live input record and playback</title>
-    <style type='text/css'>
-        #recordingslist audio { display: block; margin-bottom: 10px; }
-    </style>
-  <script src="https://www.gstatic.com/firebasejs/4.1.5/firebase.js"></script>
-  <script src="recorder.js"></script>
-  <script src="fileRead.js"></script>
-    <script>
-        var playing = false;
-        var index = 0;
-        var currentFileName = "";
-        function next(){
-            //index = (parseInt(Math.random()*100)) % 100;
-            if(playing){
+  <head>
+    <meta charset="utf-8">
+  	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+  	<meta name="viewport" content="width=device-width, initial-scale=1">
+  	<meta name="description" content="">
+    <title>Home | Live Recording & Playback</title>
+    <link rel="stylesheet" href="./css/homepage.css">
 
-                stopRecording(document.getElementById('stopRecordingButton'));
-            }
-            index = (index+1)%174;
-            console.log(index);
-            recordingslist.innerHTML = "";
-            loadText("showText", index);
-        }
-        function logout(){
-            firebase.auth().signOut();
-        }
+ <!-- Firebase -->
+ <script src="https://www.gstatic.com/firebasejs/4.1.5/firebase.js"></script>
+ <script src="recorder.js"></script>
+ <script src="fileRead.js"></script>
+   <script>
+       var playing = false;
+       var index = 0;
+       var currentFileName = "";
+       function next(){
+           //index = (parseInt(Math.random()*100)) % 100;
+           if(playing){
 
-        function writeFileToUser(filename) {
-            userId=firebase.auth().currentUser.uid;
-            if(filename != ""){
-                firebase.database().ref('users/' + userId+'/files/'+index).set({
-                    filename : filename
-                }).catch(e => alert(e));
-                firebase.database().ref('users/' + userId+'/latest').set({
-                    index : index
-                }).catch(e => alert(e));
-            }
+               stopRecording(document.getElementById('stopRecordingButton'));
+           }
+           index = (index+1)%174;
+           console.log(index);
+           recordingslist.innerHTML = "";
+           loadText("showText", index);
+       }
+       function logout(){
+           firebase.auth().signOut();
+       }
 
-        }
+       function writeFileToUser(filename) {
+           userId=firebase.auth().currentUser.uid;
+           if(filename != ""){
+               firebase.database().ref('users/' + userId+'/files/'+index).set({
+                   filename : filename
+               }).catch(e => alert(e));
+               firebase.database().ref('users/' + userId+'/latest').set({
+                   index : index
+               }).catch(e => alert(e));
+           }
 
-        function startUserMedia(stream) {
-            var input = audio_context.createMediaStreamSource(stream);
-            __log('Media stream created.');
+       }
 
-            // Uncomment if you want the audio to feedback directly
-            //input.connect(audio_context.destination);
-            //__log('Input connected to audio context destination.');
+       function startUserMedia(stream) {
+           var input = audio_context.createMediaStreamSource(stream);
+           __log('Media stream created.');
 
-            recorder = new Recorder(input);
-            __log('Recorder initialised.');
-        }
+           // Uncomment if you want the audio to feedback directly
+           //input.connect(audio_context.destination);
+           //__log('Input connected to audio context destination.');
 
-        function startRecording(button) {
-            playing = true;
-            recorder && recorder.record();
-            button.disabled = true;
-            button.nextElementSibling.disabled = false;
-            __log('Recording...');
-        }
+           recorder = new Recorder(input);
+           __log('Recorder initialised.');
+       }
 
-        function stopRecording(button) {
-            recorder && recorder.stop();
-            playing = false;
-            button.disabled = true;
-            button.previousElementSibling.disabled = false;
-            __log('Stopped recording.');
+       function startRecording(button) {
+           playing = true;
+           recorder && recorder.record();
+           button.disabled = true;
+           button.nextElementSibling.disabled = false;
+           __log('Recording...');
+       }
 
-            // create WAV download link using audio data blob
-            createDownloadLink();
+       function stopRecording(button) {
+           recorder && recorder.stop();
+           playing = false;
+           button.disabled = true;
+           button.previousElementSibling.disabled = false;
+           __log('Stopped recording.');
 
-            recorder.clear();
-        }
-        function discard(){
-            if(currentFileName != ""){
-                var storageRef = firebase.storage().ref();
-                var discardRef = storageRef.child(currentFileName);
+           // create WAV download link using audio data blob
+           createDownloadLink();
 
-                // Delete the file
-                discardRef.delete().then(function() {
-                    console.log("file discarded");
-                    document.getElementById("recordingslist").innerHTML = "";
-                }).catch(function(error) {
-                    console.log("error occurred");
-                });
+           recorder.clear();
+       }
+       function discard(){
+           if(currentFileName != ""){
+               var storageRef = firebase.storage().ref();
+               var discardRef = storageRef.child(currentFileName);
+
+               // Delete the file
+               discardRef.delete().then(function() {
+                   console.log("file discarded");
+                   document.getElementById("recordingslist").innerHTML = "";
+               }).catch(function(error) {
+                   console.log("error occurred");
+               });
 
 
-            }
-        }
+           }
+       }
 
-        function createDownloadLink() {
-            recorder && recorder.exportWAV(function(blob) {
-                var url = URL.createObjectURL(blob);
-                var li = document.createElement('li');
-                var au = document.createElement('audio');
-                var hf = document.createElement('a');
-                var button = document.createElement('button');
-                var filename = index + "_" + new Date().toISOString() + '.wav';
-                currentFileName = filename;
-                writeFileToUser(currentFileName);
-                au.controls = true;
-                au.src = url;
-                hf.href = url;
-                hf.download = filename;
-                hf.innerHTML = hf.download;
-                button.onclick = discard;
-                button.innerHTML = "discard";
-                li.appendChild(au);
-                li.appendChild(hf);
-                li.appendChild(button);
-                recordingslist.innerHTML = "";
-                recordingslist.appendChild(li);
-                var storageRef = firebase.storage().ref();
-                var voiceRef = storageRef.child(filename);
-                //var voiceSoundRef = storageRef.child('sounds/'+filename);
-                voiceRef.put(blob).then(function(snapshot){
-                    console.log('Uploaded a blob or file!');
-                });
-                //next();
-            });
-        }
+       function createDownloadLink() {
+           recorder && recorder.exportWAV(function(blob) {
+               var url = URL.createObjectURL(blob);
+               var li = document.createElement('li');
+               var au = document.createElement('audio');
+               var hf = document.createElement('a');
+               var button = document.createElement('button');
+               var filename = index + "_" + new Date().toISOString() + '.wav';
+               currentFileName = filename;
+               writeFileToUser(currentFileName);
+               au.controls = true;
+               au.src = url;
+               hf.href = url;
+               hf.download = filename;
+               hf.innerHTML = hf.download;
+               button.onclick = discard;
+               button.innerHTML = "discard";
+               li.appendChild(au);
+               li.appendChild(hf);
+               li.appendChild(button);
+               recordingslist.innerHTML = "";
+               recordingslist.appendChild(li);
+               var storageRef = firebase.storage().ref();
+               var voiceRef = storageRef.child(filename);
+               //var voiceSoundRef = storageRef.child('sounds/'+filename);
+               voiceRef.put(blob).then(function(snapshot){
+                   console.log('Uploaded a blob or file!');
+               });
+               //next();
+           });
+       }
 
-    </script>
+   </script>
 </head>
-<body>
-    <div style="position: relative; overflow: hidden;" >
-        <div style="position: relative; width: 90%; float: left;"><h1>Instructions</h1></div>
-        <div style="position: relative; width: 10%; float: left;"><button onclick="logout()">Logout</button></div>
-    </div>
-    <ul style="font-size: 18px;">
-        <li>Please connect your earphone/headphone and give permission (if you're using
-        Google Chrome) to use your microphone.</li>
-        <li>Click the record button and speak out the line that appears.</li>
-        <li>Click stop to end recording.</li>
-        <li>Click next for a new sentence.</li>
-        <li>You may play the recording and discard it if you don't like it.</li>
-        <li>The recording doesn't have to be completely clean/devoid of noise,
-            some small amount of noise is not an issue.
-            Just make sure what you are saying can be heard clearly.</li>
-        <h3><li>Please say the sentences exactly as written.</li></h3>
-        <h3><li>Please play back each recording at least once to make sure it
-            recorded what you said correctly</li></h3>
-    </ul>
-    <h3><div id ="showText" style="font-size: 30px"></div></h3>
+<!-- End of Head -->
 
-    <button onclick="next()" style="font-size: 18px;"> next </button>
-    <button id="startRecordingButton" onclick="startRecording(this);" style="font-size: 18px;">record</button>
-    <button id="stopRecordingButton" onclick="stopRecording(this);" style="font-size: 18px;" disabled>stop</button>
-  
-  <h2>Recording</h2>
-  <ul style="list-style: none" id="recordingslist"></ul>
 
-  <pre id="log"></pre>
+  <body>
+<!-- Menu -->
+    <header>
+      <div class="container">
+        <div id="branding">
+          <h1><span class="highlight">Live Voice Recorder</span></h1>
+        </div>
+        <nav>
+          <ul>
+            <li class="current"><a href="index.html">Home</a></li>
+            <li><a href="#">About us</a></li>
+            <li><a href="#" onclick="logout()"> Logout </a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+<!-- Menu -->
 
-  <script>
 
-  function __log(e, data) {
-  }
 
-  var audio_context;
-  var recorder;
+<!-- Here will be Instruction -->
+    <section id="showcase">
+      <div class="container">
+        <h1 class="instruction">Instruction</h1>
+        <ul>
+      		<li><a href="#"> Please connect your earphone/headphone and give permission (if you're using Google Chrome) to use your microphone. </a></li>
+      		<li><a href="#"> Click the record button and speak out the line that appears. </a></li>
+      		<li><a href="#"> Click stop to end recording. </a></li>
+      		<li><a href="#"> Click next for a new sentence. </a></li>
+      		<li><a href="#"> You may play the recording and discard it if you don't like it. </a></li>
+      		<li><a href="#"> The recording doesn't have to be completely clean/devoid of noise, some small amount of noise is not an issue. Just make sure what you are saying can be heard clearly. </a></li>
+      		<li><a href="#"> Please say the sentences exactly as written. </a></li>
+      		<li><a href="#">Please play back each recording at least once to make sure it recorded what you said correctly </a></li>
+      	</ul>
+      </div>
+    </section>
+<!-- Here will be instruction -->
 
-  window.onload = function init() {
-    try {
-      // webkit shim
-      window.AudioContext = window.AudioContext || window.webkitAudioContext;
-      navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia;
-      window.URL = window.URL || window.webkitURL;
-      
-      audio_context = new AudioContext;
-      __log('Audio context set up.');
-      __log('navigator.getUserMedia ' + (navigator.getUserMedia ? 'available.' : 'not present!'));
-    } catch (e) {
-      alert('No web audio support in this browser!');
+<!-- Show the Button -->
+    <section id="newsletter">
+      <div class="container">
+        <h3><div id="showText"></div></h3>
+        <nav class="one">
+          <button onclick="next()" class="next"> Next </button>
+          <button id="startRecordingButton" onclick="startRecording(this);" class="startRecordingButton">Record</button>
+          <button id="stopRecordingButton" onclick="stopRecording(this);" class="stopRecordingButton" disabled>Stop</button>
+          <!-- <button type="submit" class="button_1">Subscribe</button> -->
+        </nav>
+      </div>
+    </section>
+<!-- Show the Three Button -->
+<h2>Recording Log</h2>
+
+
+
+
+
+<!--  Log file and Recording List -->
+    <section id="boxes">
+      <div class="container">
+        <div class="box">
+          <!-- <ul style="list-style: none" id="recordingslist"></ul> -->
+          <ul id="recordingslist" class="recordingslist"></ul>
+          <pre id="log"></pre>
+        </div>
+      </div>
+    </section>
+<!--  End---->
+
+
+    <footer>
+      <p>Live Voice Recorder, Copyright &copy; 2018</p>
+    </footer>
+
+<!-- End of Html -->
+
+    <script>
+
+    function __log(e, data) {
     }
 
-      navigator.getUserMedia = ( navigator.getUserMedia ||
-                              navigator.webkitGetUserMedia ||
-                              navigator.mozGetUserMedia ||
-                              navigator.msGetUserMedia);
+    var audio_context;
+    var recorder;
 
-    navigator.getUserMedia({audio: true}, startUserMedia, function(e) {
-      __log('No live audio input: ' + e);
-    });
+    window.onload = function init() {
+      try {
+        // webkit shim
+        window.AudioContext = window.AudioContext || window.webkitAudioContext;
+        navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia;
+        window.URL = window.URL || window.webkitURL;
+
+        audio_context = new AudioContext;
+        __log('Audio context set up.');
+        __log('navigator.getUserMedia ' + (navigator.getUserMedia ? 'available.' : 'not present!'));
+      } catch (e) {
+        alert('No web audio support in this browser!');
+      }
+
+        navigator.getUserMedia = ( navigator.getUserMedia ||
+                                navigator.webkitGetUserMedia ||
+                                navigator.mozGetUserMedia ||
+                                navigator.msGetUserMedia);
+
+      navigator.getUserMedia({audio: true}, startUserMedia, function(e) {
+        __log('No live audio input: ' + e);
+      });
 
 
-  };
-  </script>
-    <script src="firebase_init_voicerecord.js"></script>
-</body>
+    };
+    </script>
+      <script src="firebase_init_voicerecord.js"></script>
+    </script>
+  </body>
 </html>
