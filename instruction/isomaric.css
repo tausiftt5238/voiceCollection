@@ -1,0 +1,116 @@
+body{
+  margin: 0;
+  padding:0;
+  background:#ccc;
+}
+
+.button{
+  position: absolute;
+  width: 70px;
+  height: 70px;
+  border-radius: 35px;
+  background: #ccc;
+  top: 87%;
+  left: 97%;
+  transform: translate(-87%,-97%);
+  margin: 0;
+  padding: 0;
+  color: gray;
+  font-size: 14px;
+  cursor:auto;
+
+}
+.button .fa{
+  font-size: 66px;
+  color: #DCDCDC;
+  line-height: 66px;
+  transition: 0.5px;
+  float: center;
+}
+.button:hover{
+  background: white;
+
+}
+#one{
+  text-align: justify;
+}
+#two{
+  text-align: justify;
+}
+#three{
+  text-align: justify;
+}
+#four{
+  text-align: justify;
+}
+#five{
+  text-align: justify;
+}
+#six{
+  text-align: justify;
+}
+#seven{
+  text-align: justify;
+}
+#eight{
+  text-align: justify;
+}
+.modal{
+  display:none;
+  position: fixed;
+  z-index:1;
+  left: 0;
+  top:0;
+  height: 100%;
+  width:100%;
+  overflow: auto;
+}
+
+.modal-content{
+  margin: 20% auto;
+  width:70%;
+  animation-name:modalopen;
+  animation-duration:1s;
+  background:rgba(192,192,192,0.5);
+
+}
+
+.modal-header h2, .modal-footer h3{
+  margin:0;
+  text-align: center;
+}
+
+.modal-header{
+  background:rgba(192,192,192,0.8);
+  padding:12px;
+  color:#fff;
+}
+
+.modal-body{
+  padding:10px 20px;
+}
+
+.modal-footer{
+  background:rgba(192,192,192,0.8);
+  padding:px;
+  color:#fff;
+  text-align: center;
+}
+
+.closeBtn{
+  color:#ccc;
+  float: right;
+  font-size:30px;
+  color:#fff;
+}
+
+.closeBtn:hover,.closeBtn:focus{
+  color:#000;
+  text-decoration: none;
+  cursor:pointer;
+}
+
+@keyframes modalopen{
+  from{ opacity: 0}
+  to {opacity: 1}
+}

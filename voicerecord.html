@@ -7,6 +7,8 @@
   	<meta name="description" content="">
     <title>Home | Live Recording & Playback</title>
     <link rel="stylesheet" href="./css/homepage.css">
+    <link rel="stylesheet" href="./instruction/isomaric.css">
+    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"/>
 
  <!-- Firebase -->
  <script src="https://www.gstatic.com/firebasejs/4.1.5/firebase.js"></script>
@@ -126,6 +128,9 @@
        }
 
    </script>
+
+
+
 </head>
 <!-- End of Head -->
 
@@ -135,48 +140,31 @@
     <header>
       <div class="container">
         <div id="branding">
-          <h1><span class="highlight">Live Voice Recorder</span></h1>
+          <h1><span class="highlight">Live Voice Recorder & Playback</span></h1>
         </div>
+
         <nav>
           <ul>
             <li class="current"><a href="index.html">Home</a></li>
             <li><a href="#">About us</a></li>
             <li><a href="#" onclick="logout()"> Logout </a></li>
+            </li>
           </ul>
         </nav>
       </div>
     </header>
 <!-- Menu -->
 
-
-
-<!-- Here will be Instruction -->
-    <section id="showcase">
-      <div class="container">
-        <h1 class="instruction">Instruction</h1>
-        <ul>
-      		<li><a href="#"> Please connect your earphone/headphone and give permission (if you're using Google Chrome) to use your microphone. </a></li>
-      		<li><a href="#"> Click the record button and speak out the line that appears. </a></li>
-      		<li><a href="#"> Click stop to end recording. </a></li>
-      		<li><a href="#"> Click next for a new sentence. </a></li>
-      		<li><a href="#"> You may play the recording and discard it if you don't like it. </a></li>
-      		<li><a href="#"> The recording doesn't have to be completely clean/devoid of noise, some small amount of noise is not an issue. Just make sure what you are saying can be heard clearly. </a></li>
-      		<li><a href="#"> Please say the sentences exactly as written. </a></li>
-      		<li><a href="#">Please play back each recording at least once to make sure it recorded what you said correctly </a></li>
-      	</ul>
-      </div>
-    </section>
-<!-- Here will be instruction -->
-
 <!-- Show the Button -->
     <section id="newsletter">
       <div class="container">
         <h3><div id="showText"></div></h3>
         <nav class="one">
-          <button onclick="next()" class="next"> Next </button>
-          <button id="startRecordingButton" onclick="startRecording(this);" class="startRecordingButton">Record</button>
-          <button id="stopRecordingButton" onclick="stopRecording(this);" class="stopRecordingButton" disabled>Stop</button>
+          <button data-toggle="tooltip" title="পরবর্তী বাক্যটির জন্য চাপ দিন " onclick="next()" class="next"> Next Sentence</button>
+          <button id="startRecordingButton" data-toggle="tooltip" title="রেকর্ডিং শুরু করতে চাপ দিন  " onclick="startRecording(this);" class="startRecordingButton">Start Recording</button>
+          <button id="stopRecordingButton" data-toggle="tooltip" title="রেকর্ডিং শেষ করতে চাপ দিন   " onclick="stopRecording(this);" class="stopRecordingButton" disabled>Stop Recording</button>
           <!-- <button type="submit" class="button_1">Subscribe</button> -->
+          <!-- <button  id="button" data-toggle="tooltip" title="Popover title by Aariyan">Click to toggle popover</button> -->
         </nav>
       </div>
     </section>
@@ -192,16 +180,53 @@
       <div class="container">
         <div class="box">
           <!-- <ul style="list-style: none" id="recordingslist"></ul> -->
-          <ul id="recordingslist" class="recordingslist"></ul>
-          <pre id="log"></pre>
+
+            <ul id="recordingslist" class="recordingslist"></ul>
+            <pre id="log"></pre>
+
         </div>
       </div>
     </section>
 <!--  End---->
 
+<!-- For information -->
+<!-- <i class="fa fa-info-circle" aria-hidden="true"> -->
+<div class="infoButton">
+<button id="modalBtn" class="button" data-toggle="tooltip" title="ব্যবহার বিধি জানতে চাপ দিন ">Rules</button>
+</div>
+
+
+
+<div id="simpleModal" class="modal">
+<div class="modal-content">
+  <div class="modal-header">
+      <span class="closeBtn">&times;</span>
+      <h2>Instruction</h2>
+  </div>
+  <!-- &#8857;&#10159;&#9999; -->
+  <div class="modal-body">
+    <p id="one">&#9999; Please connect your earphone/headphone and give permission (if you're using Google Chrome) to use your microphone.</p>
+    <p id="two">&#9999; Click the record button and speak out the line that appears.</p>
+    <p id="three">&#9999; Click stop to end recording.</p>
+    <p id="four">&#9999; Click next for a new sentence.</p>
+    <p id="five">&#9999; You may play the recording and discard it if you don't like it.</p>
+    <p id="six">&#9999; The recording doesn't have to be completely clean/devoid of noise, some small amount of noise is not an issue. Just make sure what you are saying can be heard clearly.</p>
+    <p id="seven">&#9999; Please say the sentences exactly as written.</p>
+    <p id="eight">&#9999; Please play back each recording at least once to make sure it recorded what you said correctly.</p>
+  </div>
+  <div class="modal-footer">
+    <!-- <h3>Modal Footer</h3> -->
+  </div>
+</div>
+</div>
+
+
+<script src="instruction/isomaric.js"></script>
+<!-- For information -->
+
 
     <footer>
-      <p>Live Voice Recorder, Copyright &copy; 2018</p>
+      <p>Live Voice Recorder & Playback, Copyright &copy; 2018</p>
     </footer>
 
 <!-- End of Html -->
